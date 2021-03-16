@@ -502,6 +502,11 @@ if (args.resume is not None):
     del checkpt
     del state
 
+    # save it whole!
+    torch.save(model, "/scratch/shared/nfs1/xuji/generalization/models/cifar10_resflow_full_model.pytorch")
+    print("saved")
+    exit(0)
+
 logger.info(optimizer)
 
 fixed_z = standard_normal_sample([min(32, args.batchsize),
