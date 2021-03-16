@@ -129,13 +129,13 @@ class iResBlock(nn.Module):
                 vareps = torch.randn_like(x)
 
                 # Choose the type of estimator.
-                if self.neumann_grad: # self.training and self.neumann_grad
+                if self.training and self.neumann_grad: #self.neumann_grad: #
                     estimator_fn = neumann_logdet_estimator # even if test
                 else:
                     estimator_fn = basic_logdet_estimator
 
                 # Do backprop-in-forward to save memory.
-                if self.grad_in_forward:  # (self.training and self.grad_in_forward) # even test
+                if  (self.training and self.grad_in_forward):  # self.grad_in_forward:  #
                     g, logdetgrad = mem_eff_wrapper(
                         estimator_fn, self.nnet, x, n_power_series, vareps, coeff_fn, self.training
                     )
