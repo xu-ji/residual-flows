@@ -505,7 +505,9 @@ if (args.resume is not None):
     # save it whole!
     torch.save({"density_model": model,
                 "args": args,
-                "input_size": input_size},
+                "input_size": input_size,
+                "n_classes": n_classes,
+                "im_dim": im_dim},
                "/scratch/shared/nfs1/xuji/generalization/models/cifar10_resflow_full_model.pytorch")
     print("saved")
     exit(0)
