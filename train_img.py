@@ -503,7 +503,10 @@ if (args.resume is not None):
     del state
 
     # save it whole!
-    torch.save(model, "/scratch/shared/nfs1/xuji/generalization/models/cifar10_resflow_full_model.pytorch")
+    torch.save({"density_model": model,
+                "args": args,
+                "input_size": input_size},
+               "/scratch/shared/nfs1/xuji/generalization/models/cifar10_resflow_full_model.pytorch")
     print("saved")
     exit(0)
 
