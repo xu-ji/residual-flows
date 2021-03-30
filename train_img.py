@@ -20,6 +20,8 @@ import lib.layers as layers
 import lib.layers.base as base_layers
 from lib.lr_scheduler import CosineAnnealingWarmRestarts
 
+SAVE_ONLY = False
+
 # Arguments
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -31,6 +33,7 @@ parser.add_argument(
         'celeba_5bit',
         'imagenet32',
         'imagenet64',
+        'cifar100',
     ]
 )
 parser.add_argument('--dataroot', type=str, default='data')
@@ -251,6 +254,39 @@ if args.data == 'cifar10':
         shuffle=False,
         num_workers=args.nworkers,
     )
+
+elif args.data == 'cifar100':
+    im_dim = 3
+    n_classes = 100
+    assert args.task == 'density'
+
+    # use cifar10 settings
+    transform_train = transforms.Compose([
+      transforms.Resize(args.imagesize),
+      transforms.RandomHorizontalFlip(),
+      transforms.ToTensor(),
+      add_noise,
+    ])
+    transform_test = transforms.Compose([
+      transforms.Resize(args.imagesize),
+      transforms.ToTensor(),
+      add_noise,
+    ])
+    init_layer = layers.LogitTransform(0.05)
+
+    train_loader = torch.utils.data.DataLoader(
+      datasets.CIFAR100(args.dataroot, train=True, transform=transform_train),
+      batch_size=args.batchsize,
+      shuffle=True,
+      num_workers=args.nworkers,
+    )
+    test_loader = torch.utils.data.DataLoader(
+      datasets.CIFAR100(args.dataroot, train=False, transform=transform_test),
+      batch_size=args.val_batchsize,
+      shuffle=False,
+      num_workers=args.nworkers,
+    )
+
 elif args.data == 'mnist':
     im_dim = 1
     init_layer = layers.LogitTransform(1e-6)
@@ -502,15 +538,16 @@ if (args.resume is not None):
     del checkpt
     del state
 
-    # save it whole!
-    torch.save({"density_model": model,
-                "args": args,
-                "input_size": input_size,
-                "n_classes": n_classes,
-                "im_dim": im_dim},
-               "/scratch/shared/nfs1/xuji/generalization/models/cifar10_resflow_full_model.pytorch")
-    print("saved")
-    exit(0)
+    if SAVE_ONLY:
+      # save it whole!
+      torch.save({"density_model": model,
+                  "args": args,
+                  "input_size": input_size,
+                  "n_classes": n_classes,
+                  "im_dim": im_dim},
+                 "/scratch/shared/nfs1/xuji/generalization/models/%s_resflow_full_model.pytorch" % args.data)
+      print("saved")
+      exit(0)
 
 logger.info(optimizer)
 
@@ -854,6 +891,14 @@ def main():
                 'ema': ema,
                 'test_bpd': test_bpd,
             }, os.path.join(args.save, 'models'), epoch, last_checkpoints, num_checkpoints=5)
+
+            torch.save({"density_model": model,
+                        "args": args,
+                        "input_size": input_size,
+                        "n_classes": n_classes,
+                        "im_dim": im_dim},
+                       "/scratch/shared/nfs1/xuji/generalization/models/%s_resflow_full_model.pytorch" % args.data)
+            print("saved best")
 
         torch.save({
             'state_dict': model.state_dict(),
