@@ -10,8 +10,8 @@
 #SBATCH --constraint=gmem24G|gmem32G|gmem48G
 
 
-#SBATCH -o /users/xuji/abstract/out/slurm/slurm_%j.out
-#SBATCH -e /users/xuji/abstract/out/slurm/slurm_%j.out
+#SBATCH -o /users/xuji/residual-flows/out/slurm/slurm_%j.out
+#SBATCH -e /users/xuji/residual-flows/out/slurm/slurm_%j.out
 
 
 cd /users/xuji/residual-flows
