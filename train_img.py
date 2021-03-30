@@ -19,6 +19,8 @@ import lib.utils as utils
 import lib.layers as layers
 import lib.layers.base as base_layers
 from lib.lr_scheduler import CosineAnnealingWarmRestarts
+from sys import stdout
+from datetime import datetime
 
 SAVE_ONLY = False
 
@@ -865,6 +867,8 @@ def main():
     # if args.resume:
     #     validate(args.begin_epoch - 1, model, ema)
     for epoch in range(args.begin_epoch, args.nepochs):
+        print("epoch %d of %d, %s" % (epoch, args.nepochs, datetime.now()))
+        stdout.flush()
 
         logger.info('Current LR {}'.format(optimizer.param_groups[0]['lr']))
 
