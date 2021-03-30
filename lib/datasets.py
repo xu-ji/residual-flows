@@ -56,6 +56,21 @@ class CIFAR10(object):
         return self.cifar10[index]
 
 
+class CIFAR100(object):
+  def __init__(self, dataroot, train=True, transform=None):
+    self.cifar100 = vdsets.CIFAR100(dataroot, train=train, download=False, transform=transform)
+
+  def __len__(self):
+    return len(self.cifar100)
+
+  @property
+  def ndim(self):
+    return 3
+
+  def __getitem__(self, index):
+    return self.cifar100[index]
+
+
 class CelebA5bit(object):
 
     LOC = 'data/celebahq64_5bit/celeba_full_64x64_5bit.pth'
