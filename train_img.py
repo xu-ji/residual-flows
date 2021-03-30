@@ -539,15 +539,15 @@ if (args.resume is not None):
     del state
 
     if SAVE_ONLY:
-      # save it whole!
-      torch.save({"density_model": model,
-                  "args": args,
-                  "input_size": input_size,
-                  "n_classes": n_classes,
-                  "im_dim": im_dim},
-                 "/scratch/shared/nfs1/xuji/generalization/models/%s_resflow_full_model.pytorch" % args.data)
-      print("saved")
-      exit(0)
+        # save it whole!
+        torch.save({"density_model": model,
+                    "args": args,
+                    "input_size": input_size,
+                    "n_classes": n_classes,
+                    "im_dim": im_dim},
+                   "/scratch/shared/nfs1/xuji/generalization/models/%s_resflow_full_model.pytorch" % args.data)
+        print("saved")
+        exit(0)
 
 logger.info(optimizer)
 
