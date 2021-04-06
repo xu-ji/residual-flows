@@ -900,7 +900,8 @@ def main():
                         "args": args,
                         "input_size": input_size,
                         "n_classes": n_classes,
-                        "im_dim": im_dim},
+                        "im_dim": im_dim,
+                        "epoch": epoch},
                        "/scratch/shared/nfs1/xuji/generalization/models/%s_resflow_full_model.pytorch" % args.data)
             print("saved best")
 
